@@ -5,9 +5,16 @@ our $VERSION = '0.01';
 
 sub register {
   my ($self, $app) = @_;
+  $app->helper(
+    auth_by_address => sub {
+      my ($self, $address) = @_;
+      return 1 if ($address eq $self->tx->{remote_address});
+    }
+  );
 }
 
 1;
+
 __END__
 
 =head1 NAME
