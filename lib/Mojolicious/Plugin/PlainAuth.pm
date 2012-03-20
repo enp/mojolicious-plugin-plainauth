@@ -18,9 +18,17 @@ sub register {
   );
 
   $app->helper(
+    check_account => sub {
+      my ($self,$userinfo) = @_;
+      my ($login,$password) = split(/\s+/, $userinfo);
+      return 1 if
+        $self->req->url->base->userinfo eq "$login:$password";
+    }
+  );
+
+  $app->helper(
     check_file => sub {
       my ($self,$type,$filename) = @_;
-      $self->app->log->debug("auth by $type via $filename");
       return 0 if !($type eq 'account' || $type eq 'address');
       $type = "check_$type";
       open(FILE, "<$filename") or return 0;
